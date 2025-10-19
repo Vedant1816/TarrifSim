@@ -1,5 +1,8 @@
 import bg from "../assets/bg.jpg"
+import { useNavigate } from "react-router-dom";
+
 export default function Home(){
+const navigate = useNavigate();
 function TrendCard({ title, value, change, direction = "up", subtitle }) {
   const isUp = direction === "up";
   return (
@@ -61,35 +64,40 @@ return (
 
         {/* Stats row */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      <TrendCard
-        title="Global CPO Price"
-        value="$940/MT"
-        change="+3.4% MoM"
-        direction="up"
-        subtitle="Last 30 days"
-      />
-      <TrendCard
-        title="Palm Oil Imports"
-        value="0.68 MMT"
-        change="−7.0% MoM"
-        direction="down"
-        subtitle="Monthly arrivals"
-      />
-      <TrendCard
-        title="Retail Edible Oil"
-        value="₹138/kg"
-        change="+1.2% MoM"
-        direction="up"
-        subtitle="All-India average"
-      />
-      <TrendCard
-        title="Farmer FFB Price"
-        value="₹10,850/t"
-        change="+6.0% YoY"
-        direction="up"
-        subtitle="Indicative price"
-      />
+    <TrendCard
+  title="Global CPO Price"
+  value="$935/MT"
+  change="+1.8% MoM"
+  direction="up"
+  subtitle="Nearby price; Oct ’25"
+/>
+
+<TrendCard
+  title="Palm Oil Imports (India)"
+  value="0.83 MMT"
+  change="−16.3% MoM"
+  direction="down"
+  subtitle="Sept ’25 (SEA)"
+/>
+
+<TrendCard
+  title="Retail Edible Oil (Palm, packed)"
+  value="₹124.5/kg"
+  change="—"
+  direction="flat"
+  subtitle="Latest all-India avg"
+/>
+
+<TrendCard
+  title="Farmer FFB Price (indicative)"
+  value="₹18,750/t"
+  change="−10% since May"
+  direction="down"
+  subtitle="mid-’25"
+/>
+
     </div>
+      <button onClick={() => navigate("/input")} className="text-black text-6xl mt-4 h-16">Simulate Now!</button>
       </div>
     </section>
   );
