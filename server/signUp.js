@@ -1,4 +1,3 @@
-// server/routes/signUp.js
 import express from "express";
 import bcrypt from "bcrypt";
 import { db } from "./db.js"; 

@@ -111,7 +111,7 @@ export default function SignUp() {
             <button
               type="submit"
               disabled={isBusy}
-              className={`flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white transition
+              className={`flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-black transition
                 ${isBusy ? "bg-indigo-500/70 cursor-not-allowed" : "bg-indigo-500 hover:bg-indigo-400"}`}
             >
               {isBusy ? "Creating..." : "Create Account"}
