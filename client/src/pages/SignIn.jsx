@@ -5,7 +5,7 @@ import logo from "../assets/logo.png";
 
 const ALLOWED_DOMAINS = ["gov.in", "nic.in", "ias.nic.in", "ifs.nic.in"];
 
-export default function SignIn() {
+export default function SignIn({setIsSignedIn}) {
   const [isBusy, setIsBusy] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -49,6 +49,7 @@ export default function SignIn() {
 
       // success UI
       setMsg({ type: "success", text: "Signed in successfully." });
+      setIsSignedIn(true);
       setPassword("");
 
       // Navigate to your app’s protected area (adjust path as needed)

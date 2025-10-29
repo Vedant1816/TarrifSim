@@ -5,6 +5,7 @@ import "./db.js";
 import cookieParser from "cookie-parser";
 import signUpRoute from "./signUp.js"
 import signInRoute from "./signIn.js"
+import { requireAuth } from "./authMiddleware.js";
 
 const app = express();
 const port = process.env.port || 3000;
@@ -29,6 +30,10 @@ app.get("/health", (req, res) => {
 app.use("/api/auth", signUpRoute);
 
 app.use("/api/auth", signInRoute);
+
+app.get("/api/auth/me", requireAuth, (req, res) => {
+  res.json({ message: "You are authenticated!", user: req.user });
+});
 
 app.listen(port, () => {
   console.log(`✅ Server running on http://localhost:${port}`);
