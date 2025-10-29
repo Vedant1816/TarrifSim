@@ -4,6 +4,8 @@ import Home from "./pages/Home";
 import DataInput from "./pages/dataInput";
 import Output from "./pages/Output";
 import Trends from "./pages/Trends";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
 // import Dashboard from "./pages/Dashboard";
 export default function App(){
   return(
@@ -14,6 +16,8 @@ export default function App(){
         <Route path="/input" element={<DataInput />} />
         <Route path="/output" element={<Output />} />
         <Route path="/trends" element={<Trends />} />
+        <Route path="/signIn" element={<SignIn />} />
+        <Route path="/signUp" element={<SignUp />} />
         {/* <Route path="/dashboard" element={<Dashboard />} /> */}
       </Routes>
     </BrowserRouter>
