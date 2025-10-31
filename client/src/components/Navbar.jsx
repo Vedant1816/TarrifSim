@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { User, LogOut, Settings } from "lucide-react";
-import logo from "../assets/logo.png"; // ✅ import logo
+import logo from "../assets/logo.png"; 
 
 export default function Navbar({ isSignedIn, setIsSignedIn }) {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
-  // ✅ consistent name + try/catch
   const handleLogout = async () => {
     try {
       await fetch("http://localhost:3000/api/auth/signout", {
@@ -16,7 +15,7 @@ export default function Navbar({ isSignedIn, setIsSignedIn }) {
       });
       setIsSignedIn(false);
       setIsOpen(false);
-      navigate("/signin"); // optional redirect after logout
+      navigate("/signin"); 
     } catch (e) {
       console.error("Logout failed:", e);
     }

@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import signUpRoute from "./signUp.js"
 import signInRoute from "./signIn.js"
 import { requireAuth } from "./authMiddleware.js";
+import cpoRoute from "./cpoRoutes.js";
 
 const app = express();
 const port = process.env.port || 3000;
@@ -34,6 +35,8 @@ app.use("/api/auth", signInRoute);
 app.get("/api/auth/me", requireAuth, (req, res) => {
   res.json({ message: "You are authenticated!", user: req.user });
 });
+
+app.use("/api/cpo", cpoRoute);
 
 app.listen(port, () => {
   console.log(`✅ Server running on http://localhost:${port}`);
