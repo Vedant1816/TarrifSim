@@ -1,11 +1,10 @@
-// routes/cpoRoutes.js
 import express from "express";
 const router = express.Router();
 
 // Your secret FRED key from .env
 const FRED_KEY = process.env.FRED_API_KEY;
 if (!FRED_KEY) {
-  console.error("❌ Missing FRED_API_KEY in .env");
+  console.error("! Missing FRED_API_KEY in .env");
   process.exit(1);
 }
 
@@ -51,9 +50,9 @@ router.get("/trend", async (_req, res) => {
 
     // 3️⃣ send clean JSON
     res.json({
-      date,                            // e.g. "2025-09-01"
-      value_usd_per_metric_ton: value, // e.g. 935.37
-      percent_change_mom: percentChange // e.g. 1.8
+      date,                           
+      value_usd_per_metric_ton: value, 
+      percent_change_mom: percentChange 
     });
   } catch (e) {
     console.error("CPO trend fetch failed:", e);

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Home(){
 const navigate = useNavigate();
+console.log("Home rendered");
 
 const [cpo, setCpo] = useState({
   valueText: "-",
@@ -11,6 +12,36 @@ const [cpo, setCpo] = useState({
   direction: "flat",
   subtitle: "",
 })
+
+const [indiaProd, setProd] = useState({
+  valueText: "-",
+  changeText: "-",
+  direction: "flat",
+  subtitle: "",
+})
+
+useEffect(() => {
+  (async() => {
+    try{
+     const res = await fetch("http://localhost:3000/api/cpo/india-trend");
+     const data = await res.json();
+
+     const value = data?.value;
+     const pch = data?.pch;
+     const year = data?.year;
+
+     const valueText = value ? `${value} MT` : "-";
+     const changeText = pch ? `${Math.abs(pch).toFixed(2)}%` : "-";
+     const direction = pch == 0 || pch == null ? "flat" : pch > 0 ? "up" : "down";
+     const subtitle = year ? year.replace("(P)", "").trim() : "";
+
+     setProd({valueText, changeText, direction, subtitle});
+
+    }catch(e){
+      console.log("Error fetching india crude oil production from backend", e);
+    }
+  }) ();
+}, []);
 
 useEffect(() => {
   (async() => {
@@ -41,6 +72,8 @@ useEffect(() => {
     }
   })();
 }, []);
+
+
 
 function TrendCard({ title, value, change, direction = "up", subtitle }) {
   const isUp = direction === "up";
@@ -134,28 +167,28 @@ return (
 />
 
 <TrendCard
-  title="Palm Oil Imports (India)"
-  value="0.83 MMT"
-  change="−16.3% MoM"
+  title="CPO Production (India)"
+  value={indiaProd.valueText}
+  change={indiaProd.changeText}
+  direction={indiaProd.direction}
+  subtitle={indiaProd.subtitle}
+/>
+
+<TrendCard
+  title="Basic Custom Duty On CPO (India)"
+  value="10%"
+  change="10%"
   direction="down"
-  subtitle="Sept ’25 (SEA)"
+  subtitle="30 May 2025"
 />
 
-<TrendCard
-  title="Retail Edible Oil (Palm, packed)"
-  value="₹124.5/kg"
-  change="—"
-  direction="flat"
-  subtitle="Latest all-India avg"
-/>
-
-<TrendCard
+{/* <TrendCard
   title="Farmer FFB Price (indicative)"
   value="₹18,750/t"
   change="−10% since May"
   direction="down"
   subtitle="mid-’25"
-/>
+/> */}
 
     </div>
       <button onClick={() => navigate("/input")} className="text-black text-6xl mt-4 h-16">Simulate Now!</button>

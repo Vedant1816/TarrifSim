@@ -7,9 +7,10 @@ import signUpRoute from "./signUp.js"
 import signInRoute from "./signIn.js"
 import { requireAuth } from "./authMiddleware.js";
 import cpoRoute from "./cpoRoutes.js";
+import indiaData from "./indiaData.js";
 
 const app = express();
-const port = process.env.port || 3000;
+const port = process.env.PORT || 3000;
 
 
 app.use(express.json());
@@ -37,6 +38,8 @@ app.get("/api/auth/me", requireAuth, (req, res) => {
 });
 
 app.use("/api/cpo", cpoRoute);
+
+app.use("/api/cpo", indiaData);
 
 app.listen(port, () => {
   console.log(`✅ Server running on http://localhost:${port}`);
