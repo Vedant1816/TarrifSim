@@ -9,12 +9,13 @@ if (!FRED_KEY) {
 }
 
 const BASE = "https://api.stlouisfed.org/fred/series/observations";
-const SERIES = "PPOILUSDM"; // Global Palm Oil price (USD/MT)
+const SERIES_MONTHLY = "PPOILUSDM"; // Global Palm Oil price (USD/MT)
+const SERIES_ANNUAL = "PPOILUSDA";
 
 // Simple helper to build a FRED API URL
-function fredUrl(params = {}) {
+function fredUrl(seriesId, params = {}) {
   const u = new URL(BASE);
-  u.searchParams.set("series_id", SERIES);
+  u.searchParams.set("series_id", seriesId);
   u.searchParams.set("file_type", "json");
   u.searchParams.set("api_key", FRED_KEY);
   for (const [k, v] of Object.entries(params)) u.searchParams.set(k, v);
@@ -32,7 +33,7 @@ router.get("/trend", async (_req, res) => {
   try {
     // 1️⃣ latest price
     const latestData = await getJson(
-      fredUrl({ limit: "1", sort_order: "desc" })
+      fredUrl(SERIES_MONTHLY,{ limit: "1", sort_order: "desc" })
     );
 
     const latestObs = latestData?.observations?.[0];
@@ -42,7 +43,7 @@ router.get("/trend", async (_req, res) => {
 
     // 2️⃣ month-over-month % change
     const momData = await getJson(
-      fredUrl({ units: "pch", limit: "1", sort_order: "desc" })
+      fredUrl(SERIES_MONTHLY,{ units: "pch", limit: "1", sort_order: "desc" })
     );
     const momObs = momData?.observations?.[0];
     const percentChange =
@@ -59,5 +60,20 @@ router.get("/trend", async (_req, res) => {
     res.status(500).json({ error: "FRED fetch failed" });
   }
 });
+
+router.get("/annual-trend", async(_req, res) => {
+  try{
+    const data = await getJson(
+      fredUrl(SERIES_ANNUAL, {limit: "10", sort_order: "desc"})
+    );
+    const obs = data?.observations.reverse();
+  
+    res.json({
+      obs
+    });
+  } catch(e) {
+    console.log("Error fetching annual global CPO data from FRED", e);
+  }
+})
 
 export default router;

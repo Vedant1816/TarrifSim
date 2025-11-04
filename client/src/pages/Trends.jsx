@@ -11,6 +11,7 @@ import {
   CartesianGrid,
   ReferenceDot,
 } from "recharts";
+import GlobalCPOChart from "../components/GlobalCPOChart";
 
 /**
  * Annual Trends Dashboard
@@ -127,14 +128,7 @@ export default function Trends() {
         </div>
 
         {/* Charts */}
-        <ChartBlock
-          title="Global CPO Price (USD/MT)"
-          data={rows}
-          dataKey="globalCPO"
-          yTickFormatter={fmtUSD}
-          lineColor="#0ea5e9" // sky-500
-          tooltipFmt={(v, n) => [fmtUSD(v), n]}
-        />
+        <GlobalCPOChart />
 
         <ChartBlock
           title="India Retail Edible Oil (₹/kg)"
