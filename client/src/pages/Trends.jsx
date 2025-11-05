@@ -1,5 +1,5 @@
 // src/pages/Trends.jsx
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect } from "react";
 import {
   LineChart,
   Line,
@@ -12,6 +12,7 @@ import {
   ReferenceDot,
 } from "recharts";
 import GlobalCPOChart from "../components/GlobalCPOChart";
+import IndianProdChart from "../components/IndianProdChart";
 
 /**
  * Annual Trends Dashboard
@@ -70,6 +71,71 @@ export default function Trends() {
   const rows = useMemo(buildAnnualRows, []);
   const last = rows[rows.length - 1];
   const prev = rows[rows.length - 2];
+  const [globalCPO, setGlobalCPO] = React.useState({
+    value : "-",
+    change : "-",
+    subtitle : "-",
+    direction : "flat"
+  })
+
+  const [indianProd, setIndianProd] = React.useState({
+    value : "-",
+    change : "-",
+    subtitle : "-",
+    direction : "flat"
+  })
+
+  useEffect(() => {
+    (async() => {
+      try{
+        const res = await fetch("http://localhost:3000/api/cpo/trend");
+        const data = await res.json();
+  
+        const val = data?.value_usd_per_metric_ton;
+        const pct = data?.percent_change_mom;
+        const date = data?.date;
+        const direction = pct == 0 || pct == null ? "flat" : pct > 0 ? "up" : "down";
+  
+        const value = val ? `$${Math.round(val)}/MT` : "—";
+  
+        const change = pct
+            ? `${pct.toFixed(1)}% MoM`
+            : "—";
+        
+        const subtitle = date
+            ? new Date(date).toLocaleString("en-IN", {
+                month: "short",
+                year: "2-digit",
+              })
+            : "";
+             setGlobalCPO({ value, change, subtitle, direction });
+      } catch(err) {
+        console.log("error(frontend) fetching Global CPO data : ", err)
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async() => {
+      try{
+        const res = await fetch("http://localhost:3000/api/cpo/india-trend");
+     const data = await res.json();
+
+     const val = data?.value;
+     const pch = data?.pch;
+     const year = data?.year;
+
+     const value = val ? `${val} MT` : "-";
+     const change = pch ? `${Math.abs(pch).toFixed(2)}%` : "-";
+     const subtitle = year ? year.replace("(P)", "").trim() : "";
+     const direction = pch == 0 || pch == null ? "flat" : pch > 0 ? "up" : "down";
+
+     setIndianProd({value, change, subtitle, direction});
+      } catch(e){
+         console.log("Error(frontend) fetching indian cpo prod data ", err)
+      }
+    })();
+  }, []);
 
   // Simple YoY deltas for KPI cards
   const delta = (cur, prev) =>
@@ -97,15 +163,17 @@ export default function Trends() {
         <div className="grid lg:grid-cols-5 sm:grid-cols-2 gap-4 mb-8">
           <KPI
             title="Global CPO"
-            value={`${fmtUSD(last.globalCPO)}/MT`}
-            delta={dGlobal}
+            value={globalCPO.value}
+            delta={parseFloat(globalCPO.change)}
             unit="%"
+            direction={globalCPO.direction}
           />
           <KPI
-            title="Retail Edible Oil"
-            value={`${fmtINR(last.retail)}/kg`.replace(",","")}
-            delta={dRetail}
+            title="India"
+            value={parseFloat(indianProd.value).toLocaleString("en-IN")}
+            delta={parseFloat(indianProd.change)}
             unit="%"
+            direction={indianProd.direction}
           />
           <KPI
             title="CPI (YoY)"
@@ -130,14 +198,16 @@ export default function Trends() {
         {/* Charts */}
         <GlobalCPOChart />
 
-        <ChartBlock
+        <IndianProdChart />
+
+        {/* <ChartBlock
           title="India Retail Edible Oil (₹/kg)"
           data={rows}
           dataKey="retail"
           yTickFormatter={(v) => `₹${v}`}
           lineColor="#059669" // emerald-600
           tooltipFmt={(v, n) => [`₹${(+v).toFixed(2)}`, n]}
-        />
+        /> */}
 
         <ChartBlock
           title="CPI (YoY, %)"
@@ -173,14 +243,14 @@ export default function Trends() {
 
 /* ---------------- UI Components ---------------- */
 
-function KPI({ title, value, delta, unit }) {
-  const arrow = delta > 0 ? "▲" : delta < 0 ? "▼" : "–";
+function KPI({ title, value, delta, unit, direction }) {
+  const arrow = direction == "up" ? "▲" : direction == "down" ? "▼" : "–";
   const cls =
-    delta > 0 ? "text-emerald-600" : delta < 0 ? "text-rose-600" : "text-slate-500";
+    direction =="up" ? "text-emerald-600" : direction == "down" ? "text-rose-600" : "text-slate-500";
   const label =
     unit === "pp"
-      ? `${delta > 0 ? "+" : ""}${delta.toFixed(1)} pp`
-      : `${delta > 0 ? "+" : ""}${delta.toFixed(1)}%`;
+      ? `${direction == "up" ? "+" : ""}${delta.toFixed(1)} pp`
+      : `${direction == "up" ? "+" : ""}${delta.toFixed(1)}%`;
 
   return (
     <div className="bg-white rounded-2xl shadow p-4">

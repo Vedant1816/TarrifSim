@@ -41,4 +41,18 @@ router.get("/india-trend", async(_req, res)=> {
     }
 });
 
+router.get("/india-annual-trend", async(_req, res)=> {
+    try{
+        const data = await getJson(govUrl());
+        const records = data?.records;
+        const latestRecords = records?.slice(-10);
+        res.json({
+            latestRecords
+        });
+
+    }catch(e){
+        console.log("Error fetching from Gov API annual Indian CPO Data", e);
+    }
+})
+
 export default router;
