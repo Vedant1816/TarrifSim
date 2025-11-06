@@ -46,7 +46,8 @@ const MOCK_RETAIL = [92, 96, 98, 100, 116, 145, 135, 128, 126, 124];
 const MOCK_CPI = [4.9, 3.6, 3.9, 4.8, 6.2, 5.1, 6.7, 5.7, 5.5, 5.6];
 
 // Customs Duty (BCD) ad-valorem on assessable value (%; annual typical)
-const MOCK_BCD = [7.5, 7.5, 7.5, 7.5, 5.0, 5.0, 5.0, 5.5, 12.0, 16.0];
+const BCD_DATE = ["Jan-2019", "Oct-2022", "Sept-2024", "May-2025"]
+const MOCK_BCD = [40, 0, 20, 10];
 
 // Farmer FFB prices (₹/t, indicative avg; illustrative)
 const MOCK_FFB = [9500, 9800, 10050, 10200, 11000, 13500, 16000, 17500, 19500, 18750];
@@ -57,9 +58,8 @@ const fmtUSD = (n) => (typeof n === "number" ? `$${n.toLocaleString("en-US")}` :
 const fmtPct = (n) => (typeof n === "number" ? `${n.toFixed(1)}%` : n);
 
 function buildAnnualRows() {
-  return YEARS.map((year, i) => ({
+  return BCD_DATE.map((year, i) => ({
     year,
-    globalCPO: MOCK_GLOBAL_CPO[i],
     retail: MOCK_RETAIL[i],
     cpi: MOCK_CPI[i],
     bcd: MOCK_BCD[i],
@@ -176,15 +176,16 @@ export default function Trends() {
             direction={indianProd.direction}
           />
           <KPI
+            title="Basic Custom Duty on CPO(India)"
+            value={`${last.bcd.toFixed(1)}%`}
+            delta={dBCD}
+            unit="%"
+            direction={dBCD > 0 ? "up" : dBCD < 0 ? "down" : "flat"}
+          />
+          {/* <KPI
             title="CPI (YoY)"
             value={`${last.cpi.toFixed(1)}%`}
             delta={dCPI}
-            unit="pp"
-          />
-          <KPI
-            title="BCD (Customs Duty)"
-            value={`${last.bcd.toFixed(1)}%`}
-            delta={dBCD}
             unit="pp"
           />
           <KPI
@@ -192,7 +193,7 @@ export default function Trends() {
             value={`${fmtINR(last.ffb)}/t`}
             delta={dFFB}
             unit="%"
-          />
+          /> */}
         </div>
 
         {/* Charts */}
@@ -210,15 +211,6 @@ export default function Trends() {
         /> */}
 
         <ChartBlock
-          title="CPI (YoY, %)"
-          data={rows}
-          dataKey="cpi"
-          yTickFormatter={(v) => `${v}%`}
-          lineColor="#f59e0b" // amber-500
-          tooltipFmt={(v, n) => [`${(+v).toFixed(1)}%`, n]}
-        />
-
-        <ChartBlock
           title="Customs Duty (BCD, %)"
           data={rows}
           dataKey="bcd"
@@ -228,6 +220,15 @@ export default function Trends() {
           emphasizeLast
         />
 
+        {/* <ChartBlock
+          title="CPI (YoY, %)"
+          data={rows}
+          dataKey="cpi"
+          yTickFormatter={(v) => `${v}%`}
+          lineColor="#f59e0b" // amber-500
+          tooltipFmt={(v, n) => [`${(+v).toFixed(1)}%`, n]}
+        />
+
         <ChartBlock
           title="Farmer FFB Price (₹/t)"
           data={rows}
@@ -235,7 +236,7 @@ export default function Trends() {
           yTickFormatter={(v) => `₹${v.toLocaleString("en-IN")}`}
           lineColor="#7c3aed" // violet-600
           tooltipFmt={(v, n) => [fmtINR(v), n]}
-        />
+        /> */}
       </div>
     </div>
   );
@@ -258,7 +259,7 @@ function KPI({ title, value, delta, unit, direction }) {
       <div className="text-2xl font-semibold mt-1">{value}</div>
       <div className="text-xs mt-1">
         <span className={`inline-flex items-center gap-1 font-medium ${cls}`}>
-          {arrow} {label} YoY
+          {arrow} {label} 
         </span>
       </div>
     </div>
