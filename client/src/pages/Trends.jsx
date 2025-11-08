@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import GlobalCPOChart from "../components/GlobalCPOChart";
 import IndianProdChart from "../components/IndianProdChart";
+import PieChart from "../components/PieChart";
 
 /**
  * Annual Trends Dashboard
@@ -148,6 +149,13 @@ export default function Trends() {
   const dCPI = last.cpi - prev.cpi; // absolute pp change is more interpretable here
   const dBCD = last.bcd - prev.bcd; // percentage points
   const dFFB = delta(last.ffb, prev.ffb);
+  const retailOilShare = [
+  { name: "Palm Oil", value: 38 },
+  { name: "Soybean Oil", value: 25 },
+  { name: "Sunflower Oil", value: 15 },
+  { name: "Mustard Oil", value: 12 },
+  { name: "Others", value: 10 },
+];
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 p-6">
@@ -237,6 +245,12 @@ export default function Trends() {
           lineColor="#7c3aed" // violet-600
           tooltipFmt={(v, n) => [fmtINR(v), n]}
         /> */}
+        <PieChart
+            title="Retail Edible Oil Market Share (India, 2024)"
+            data={retailOilShare}
+            innerRadius={70}
+            valueFormatter={(n) => `${n}%`}
+        />
       </div>
     </div>
   );
