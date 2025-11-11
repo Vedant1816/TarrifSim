@@ -12,7 +12,7 @@ export default function GlobalCPOChart(){
 
               const observations = data?.obs.map((o) => ({
                  date: new Date(o.date).getFullYear(),
-                 value: Number(o.value).toFixed(2),
+                 global_cpo: Number(o.value).toFixed(2),
               }));
 
 
@@ -28,7 +28,7 @@ export default function GlobalCPOChart(){
     return(
         <>
           <ChartBlock title = "Global CPO Prices(USD per MT)" 
-          data = {annualData} dataKey = "value" 
+          data = {annualData} dataKey = "global_cpo" 
           yTickFormatter={(v) => `$${v.toLocaleString("en-US")}`}
           tooltipFormatter={(v, n) => [`$${v.toLocaleString("en-US")}`, "Global CPO Price"]}
           />

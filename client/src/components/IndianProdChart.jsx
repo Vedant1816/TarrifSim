@@ -12,7 +12,7 @@ export default function GlobalCPOChart(){
               
               const observations = data.latestRecords.map((o) => ({
                  date : o._year.replace("(P)"   , ""),
-                 value : o.production_of_crude_palm_oil__cpo___in_metric_tons_
+                 CPO_produciton : o.production_of_crude_palm_oil__cpo___in_metric_tons_
               }));
 
               if(observations){
@@ -28,7 +28,7 @@ export default function GlobalCPOChart(){
     return(
         <>
          <ChartBlock title = "Production of CPO(metric tons) in India" 
-                   data = {annualData} dataKey = "value" 
+                   data = {annualData} dataKey = "CPO_produciton" 
                    yTickFormatter={(v) => `${v.toLocaleString("en-US")}`}
                    tooltipFormatter={(v, n) => [`${v.toLocaleString("en-US")}`, "India"]}
         />
