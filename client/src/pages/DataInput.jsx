@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import databg from "../assets/databg.png";
 
+const todayISO = new Date().toISOString().slice(0, 10);
+
 const DEFAULTS = {
-  r_BCD: 5,           // percent
-  scenario_time: "",  // optional
+  bcd: 5,
+  targetDate: todayISO
 };
+
 
 export default function DataInput() {
   const navigate = useNavigate();
@@ -17,49 +20,60 @@ export default function DataInput() {
     setForm((f) => ({ ...f, [key]: val }));
   }
 
-  function validate() {
+ function validate() {
     const e = {};
-    if (form.r_BCD === "" || isNaN(Number(form.r_BCD))) {
-      e.r_BCD = "Enter a valid number";
-    } else if (Number(form.r_BCD) < 0 || Number(form.r_BCD) > 100) {
-      e.r_BCD = "Duty must be between 0 and 100";
+
+    if (form.bcd === "" || isNaN(Number(form.bcd))) {
+       e.bcd = "Enter a valid number";
+    } else if (Number(form.bcd) < 0 || Number(form.bcd) > 100) {
+       e.bcd = "Duty must be between 0 and 100";
     }
+
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(form.targetDate)) {
+       e.targetDate = "Invalid date format";
+    }
+
     setErrors(e);
     return Object.keys(e).length === 0;
-  }
+}
 
   async function handleSubmit(e) {
-    e.preventDefault();
-    if (!validate()) return;
+  e.preventDefault();
+  if (!validate()) return;
 
-    setIsLoading(true);
+  setIsLoading(true);
 
-    try {
-      const now = new Date();
-      const scenarioDate = form.scenario_time ? new Date(form.scenario_time) : now;
+  try {
+    const params = new URLSearchParams({
+      bcd: form.bcd,
+      targetDate: form.targetDate
+    });
 
-      const payload = {
-        r_BCD: Number(form.r_BCD) / 100,
-        scenario_time_iso: scenarioDate.toISOString(),
-        saved_at: now.toISOString(),
-      };
+    const res = await fetch(
+      `http://localhost:3000/api/simulate?${params.toString()}`
+    );
 
-      localStorage.setItem("cpo_sim_inputs", JSON.stringify(payload));
-
-      // Fake compute delay for UX (optional): remove or tweak as you wish
-      await new Promise((res) => setTimeout(res, 700));
-
-      // ✅ Go straight to output
-      navigate("/output");
-    } finally {
-      // If you navigate away immediately, this won't flash;
-      // it's here for safety if navigation is blocked.
-      setIsLoading(false);
+    if (!res.ok) {
+      throw new Error("Simulation failed");
     }
+
+    const data = await res.json();
+
+    // store result for output page
+    localStorage.setItem("cpo_sim_result", JSON.stringify(data));
+
+    navigate("/output");
+  } catch (err) {
+    alert("Simulation failed. Please try again.");
+    console.error(err);
+  } finally {
+    setIsLoading(false);
   }
+}
+
 
   function clearAll() {
-    setForm({ r_BCD: "", scenario_time: "" });
+    setForm({ bcd: "", targetDate: "" });
     setErrors({});
   }
 
@@ -112,14 +126,14 @@ export default function DataInput() {
                 step="0.1"
                 min="0"
                 max="100"
-                value={form.r_BCD}
-                onChange={(e) => setField("r_BCD", e.target.value)}
+                value={form.bcd}
+                onChange={(e) => setField("bcd", e.target.value)}
                 className="mt-1 w-full border rounded-xl px-3 py-2 font-mono disabled:bg-slate-100"
                 placeholder="e.g., 5"
                 disabled={isLoading}
               />
-              {errors.r_BCD && (
-                <p className="text-rose-600 text-sm mt-1">{errors.r_BCD}</p>
+              {errors.bcd && (
+                <p className="text-rose-600 text-sm mt-1">{errors.bcd}</p>
               )}
               <p className="text-xs text-slate-500 mt-1">
                 Example: enter <code>5</code> for 5%.
@@ -132,9 +146,9 @@ export default function DataInput() {
                 Scenario Timeframe (optional)
               </label>
               <input
-                type="datetime-local"
-                value={form.scenario_time}
-                onChange={(e) => setField("scenario_time", e.target.value)}
+                type="date"
+                value={form.targetDate}
+                onChange={(e) => setField("targetDate", e.target.value)}
                 className="mt-1 w-full border rounded-xl px-3 py-2 font-mono disabled:bg-slate-100"
                 disabled={isLoading}
               />
@@ -170,8 +184,8 @@ export default function DataInput() {
 
           <section className="mt-6 text-xs text-slate-600">
             <p>
-              This page only collects the ad-valorem customs duty and the time at
-              which your scenario applies. Other parameters use defaults on the
+              This page only collects the customs duty and the time at
+              which your scenario applies. Other parameters use real time live data on the
               output page.
             </p>
           </section>

@@ -7,6 +7,7 @@ import Output from "./pages/Output";
 import Trends from "./pages/Trends";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import Dashboard from "./pages/Dashboard";
 // import Dashboard from "./pages/Dashboard";
 
 export default function App(){
@@ -46,9 +47,7 @@ export default function App(){
         <Route path="/input" element={isSignedIn ? <DataInput /> : <Navigate to="/signin" replace/>} />
         <Route path="/output" element={isSignedIn ? <Output /> : <Navigate to="/signin" replace/>} />
         <Route path="/trends" element={isSignedIn ? <Trends /> : <Navigate to="/signin" replace/>} />
-        
-        
-        {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+        <Route path="/dashboard" element={<Dashboard />} /> 
       </Routes>
     </BrowserRouter>
   )

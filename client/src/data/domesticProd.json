@@ -1,0 +1,13 @@
+{
+    "data" : [
+        {"year" : 2016, "domestic_prod" :210219},
+        {"year" : 2017, "domestic_prod" :271349},
+        {"year" : 2018, "domestic_prod" :279085},
+        {"year" : 2019, "domestic_prod" :254815},
+        {"year" : 2020, "domestic_prod" :272339},
+        {"year" : 2021, "domestic_prod" :360729},
+        {"year" : 2022, "domestic_prod" :350918},
+        {"year" : 2023, "domestic_prod" :360000},
+        {"year" : 2024, "domestic_prod" :380000}
+    ]
+}

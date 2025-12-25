@@ -122,11 +122,11 @@ export default function Trends() {
   const dBCD = last.bcd - prev.bcd;
 
   const retailOilShare = [
-    { name: "Palm Oil", value: 38 },
-    { name: "Soybean Oil", value: 25 },
-    { name: "Sunflower Oil", value: 15 },
-    { name: "Mustard Oil", value: 12 },
-    { name: "Others", value: 10 },
+    { name: "Palm Oil", value: 31.5 },
+    { name: "Soybean Oil", value: 28 },
+    { name: "Sunflower Oil", value: 17.5 },
+    { name: "Mustard Oil", value: 12.5 },
+    { name: "Others", value: 10.5 },
   ];
 
   return (
@@ -135,15 +135,15 @@ export default function Trends() {
         <header className="mb-6">
           <h1 className="text-3xl font-bold">CPO Ecosystem — Annual Trends</h1>
           <p className="text-slate-600 mt-1">
-            Key indicators over past years: Global CPO price, Indian retail edible oil price, CPI,
-            customs duties, and farmer FFB prices.
+            Key indicators over past years: Global CPO price, Domestic Production,
+            Custom Duties and Market Split.
           </p>
         </header>
 
         {/* KPI Cards */}
         <div className="grid lg:grid-cols-5 sm:grid-cols-2 gap-4 mb-8">
-          <KPI title="Global CPO" value={globalCPO.value} delta={parseFloat(globalCPO.change)} unit="%" direction={globalCPO.direction} />
-          <KPI title="India" value={parseFloat(indianProd.value).toLocaleString("en-IN")} delta={parseFloat(indianProd.change)} unit="%" direction={indianProd.direction} />
+          <KPI title="Global CPO Price" value={globalCPO.value} delta={parseFloat(globalCPO.change)} unit="%" direction={globalCPO.direction} />
+          <KPI title="Domestic Production(MT)" value={parseFloat(indianProd.value).toLocaleString("en-IN")} delta={parseFloat(indianProd.change)} unit="%" direction={indianProd.direction} />
           <KPI title="Basic Custom Duty on CPO(India)" value={`${last.bcd.toFixed(1)}%`} delta={dBCD} unit="%" direction={dBCD > 0 ? "up" : dBCD < 0 ? "down" : "flat"} />
         </div>
 
@@ -168,7 +168,7 @@ export default function Trends() {
 
         <RevealOnScroll>
           <PieChart
-            title="Retail Edible Oil Market Share (India, 2024)"
+            title="Retail Edible Oil Market Share (India, 2025)"
             data={retailOilShare}
             innerRadius={70}
             valueFormatter={(n) => `${n}%`}

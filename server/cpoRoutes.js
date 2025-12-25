@@ -76,4 +76,34 @@ router.get("/annual-trend", async(_req, res) => {
   }
 })
 
+router.get("/monthly-trend", async(_req, res) => {
+  try{
+    const data = await getJson(
+      fredUrl(SERIES_MONTHLY, {limit: "10", sort_order: "desc"})
+    );
+    const obs = data?.observations.reverse();
+    res.json({
+      obs
+    });
+  } catch(e){
+    console.log("Error fetching monthly trends of Global CPO from Fred", e);
+  }
+})
+
+async function getLatestCpoPrice() {
+  const url = fredUrl(SERIES_MONTHLY, {
+    limit: "1",
+    sort_order: "desc"
+  });
+  const data = await getJson(url);
+  const obs = data?.observations?.[0];
+  if (!obs || obs.value === ".") return null;
+  return{
+    date: obs.date,
+    value: Number(obs.value)
+  };
+
+}
+
+export { getLatestCpoPrice };
 export default router;

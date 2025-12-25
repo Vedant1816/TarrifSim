@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import bg from "../assets/bg.jpg"
+import bg from "../assets/databg.png"
 import { useNavigate } from "react-router-dom";
 
 export default function Home(){
@@ -56,7 +56,7 @@ useEffect(() => {
       const valueText = val ? `$${Math.round(val)}/MT` : "—";
 
       const changeText = pct
-          ? `${pct.toFixed(1)}% MoM`
+          ? `${pct.toFixed(1)}%`
           : "—";
       
       const direction = pct === 0 || pct === null ? "flat" : pct > 0 ? "up" : "down";

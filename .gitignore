@@ -8,3 +8,9 @@ server/dist/
 # Environment files
 *.env
 .env.*
+
+#Venv
+venv/
+
+#Data
+ml/data
