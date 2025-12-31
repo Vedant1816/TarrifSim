@@ -53,6 +53,7 @@ function RevealOnScroll({ children, height = 340, offset = 120 }) {
 
 /* ---------- Page ---------- */
 export default function Trends() {
+  const API_URL = import.meta.env.VITE_API_URL;
   const rows = useMemo(buildAnnualRows, []);
   const last = rows[rows.length - 1];
   const prev = rows[rows.length - 2];
@@ -74,7 +75,7 @@ export default function Trends() {
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch("http://localhost:3000/api/cpo/trend");
+        const res = await fetch(`${API_URL}/api/cpo/trend`);
         const data = await res.json();
         const val = data?.value_usd_per_metric_ton;
         const pct = data?.percent_change_mom;

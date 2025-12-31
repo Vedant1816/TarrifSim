@@ -1,21 +1,18 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { User, LogOut, Settings } from "lucide-react";
-import logo from "../assets/logo.png"; 
+import { supabase } from "../supabaseClient";
+import logo from "../assets/logo.png";
 
-export default function Navbar({ isSignedIn, setIsSignedIn }) {
+export default function Navbar({ isSignedIn }) {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
-      await fetch("http://localhost:3000/api/auth/signout", {
-        method: "POST",
-        credentials: "include",
-      });
-      setIsSignedIn(false);
+      await supabase.auth.signOut();
       setIsOpen(false);
-      navigate("/signin"); 
+      navigate("/signin");
     } catch (e) {
       console.error("Logout failed:", e);
     }
@@ -36,7 +33,7 @@ export default function Navbar({ isSignedIn, setIsSignedIn }) {
         <Link to="/dashboard" className="hover:text-indigo-400 transition-colors">Dashboard</Link>
       </div>
 
-      {/* Right side: Profile / Log In */}
+      {/* Right side */}
       <div className="relative">
         {isSignedIn ? (
           <>
@@ -46,8 +43,8 @@ export default function Navbar({ isSignedIn, setIsSignedIn }) {
               aria-haspopup="menu"
               aria-expanded={isOpen}
             >
-              <User className="w-6 h-6 text-slate-800 group-hover:text-indigo-400 transition-colors" />
-              <span className="hidden sm:inline text-sm text-slate-800 group-hover:text-indigo-400 transition-colors">
+              <User className="w-6 h-6 text-black group-hover:text-indigo-400 transition-colors" />
+              <span className="hidden sm:inline text-sm text-black group-hover:text-indigo-400 transition-colors">
                 Profile
               </span>
             </button>
@@ -63,16 +60,16 @@ export default function Navbar({ isSignedIn, setIsSignedIn }) {
                   className="block px-4 py-2 text-sm text-slate-200 hover:bg-slate-700 transition"
                   role="menuitem"
                 >
-                  <Settings className="inline w-4 h-8 mr-2" /> Account Settings
+                  <Settings className="inline w-4 h-4 mr-2" /> Account Settings
                 </Link>
 
-                <Link
+                <button
                   onClick={handleLogout}
-                  className="block px-4 py-2 text-sm text-slate-200 hover:bg-slate-700 transition"
+                  className="w-full text-left px-3 !py-1 text-xs text-black hover:bg-slate-700 transition"
                   role="menuitem"
                 >
-                  <LogOut className="inline w-4 h-8 mr-2" /> Log Out
-                </Link>
+                    <LogOut className="inline w-3.5 h-3.5 mr-2" /> Log Out
+                </button>
               </div>
             )}
           </>

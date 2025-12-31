@@ -3,6 +3,7 @@ import bg from "../assets/databg.png"
 import { useNavigate } from "react-router-dom";
 
 export default function Home(){
+const API_URL = import.meta.env.VITE_API_URL;
 const navigate = useNavigate();
 console.log("Home rendered");
 
@@ -23,7 +24,7 @@ const [indiaProd, setProd] = useState({
 useEffect(() => {
   (async() => {
     try{
-     const res = await fetch("http://localhost:3000/api/cpo/india-trend");
+     const res = await fetch(`${API_URL}/api/cpo/india-trend`);
      const data = await res.json();
 
      const value = data?.value;
@@ -46,7 +47,7 @@ useEffect(() => {
 useEffect(() => {
   (async() => {
     try{
-      const res = await fetch("http://localhost:3000/api/cpo/trend");
+      const res = await fetch(`${API_URL}/api/cpo/trend`);
       const data = await res.json();
 
       const val = data?.value_usd_per_metric_ton;

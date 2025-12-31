@@ -4,6 +4,7 @@ import { getLatestCpoPrice } from "./cpoRoutes.js";
 import { get_fx } from "./fx.js";
 import path from "path";
 import { fileURLToPath } from "url";
+import { requireAuth } from "./authMiddleware.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -79,7 +80,7 @@ function monthsBetween(fromDate, toDate){
    );
 }
 
-router.get("/", async (req, res) => {
+router.get("/", requireAuth, async (req, res) => {
    try{
       const bcd = Number(req.query.bcd);
       const targetDateStr = req.query.targetDate;

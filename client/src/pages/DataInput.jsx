@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import databg from "../assets/databg.png";
+import { apiFetch } from "../apiFetch";
 
 const todayISO = new Date().toISOString().slice(0, 10);
 
@@ -11,6 +12,7 @@ const DEFAULTS = {
 
 
 export default function DataInput() {
+  const API_URL = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
   const [form, setForm] = useState({ ...DEFAULTS });
   const [errors, setErrors] = useState({});
@@ -49,9 +51,12 @@ export default function DataInput() {
       targetDate: form.targetDate
     });
 
-    const res = await fetch(
-      `http://localhost:3000/api/simulate?${params.toString()}`
-    );
+    const res = await apiFetch(
+  `${API_URL}/api/simulate?${params.toString()}`,
+  {
+    method: "GET",
+  }
+);
 
     if (!res.ok) {
       throw new Error("Simulation failed");

@@ -1,10 +1,8 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import "./db.js";
 import cookieParser from "cookie-parser";
 import signUpRoute from "./signUp.js"
-import signInRoute from "./signIn.js"
 import { requireAuth } from "./authMiddleware.js";
 import cpoRoute from "./cpoRoutes.js";
 import indiaData from "./indiaData.js";
@@ -33,7 +31,6 @@ app.get("/health", (req, res) => {
 
 app.use("/api/auth", signUpRoute);
 
-app.use("/api/auth", signInRoute);
 
 app.get("/api/auth/me", requireAuth, (req, res) => {
   res.json({ message: "You are authenticated!", user: req.user });

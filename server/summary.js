@@ -1,9 +1,10 @@
 import express from "express"
 import { generateTariffSummary } from "./generateSummary.js"
+import { requireAuth } from "./authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/", async(req, res)=>{
+router.post("/", requireAuth, async(req, res)=>{
     try{
         const{inputs, market, outputs, current} = req.body
         if(!inputs || !outputs){

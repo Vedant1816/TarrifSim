@@ -5,7 +5,9 @@ import { useNavigate } from "react-router-dom";
 import MonthlyGlobalCPOChart from "../components/MonthlyGlobalCPOChart"
 import useScrollVisibility from "../hooks/useScrollVisibility";
 import SimProd from "../components/SimProd";
-import CurrData from "../data/currData.json"
+import CurrData from "../data/currData.json";
+import { supabase } from "../supabaseClient";
+import { apiFetch } from "../apiFetch";
 
 function RevealOnScroll({ children, height = 340, offset = 120 }) {
   const { ref, visible } = useScrollVisibility(offset, true);
@@ -25,6 +27,7 @@ function RevealOnScroll({ children, height = 340, offset = 120 }) {
 
 
 export default function Output(){
+  const API_URL = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
   const [result, setResult] = useState(null);
   const [summary, setSummary] = useState("");
@@ -115,7 +118,7 @@ export default function Output(){
     try{
       setIsGenerating(true);
       setSummaryError("");
-      const res = await fetch("http://localhost:3000/api/summary",{
+      const res = await apiFetch(`${API_URL}/api/summary`,{
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body:JSON.stringify({
