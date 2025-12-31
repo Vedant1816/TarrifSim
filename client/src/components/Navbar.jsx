@@ -65,7 +65,7 @@ export default function Navbar({ isSignedIn }) {
 
                 <button
                   onClick={handleLogout}
-                  className="w-full text-left px-3 !py-1 text-xs text-black hover:bg-slate-700 transition"
+                  className="w-full text-left px-3 py-1! text-xs text-black hover:bg-slate-700 transition"
                   role="menuitem"
                 >
                     <LogOut className="inline w-3.5 h-3.5 mr-2" /> Log Out

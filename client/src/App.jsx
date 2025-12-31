@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
-import DataInput from "./pages/dataInput";
+import DataInput from "./pages/DataInput";
 import Output from "./pages/Output";
 import Trends from "./pages/Trends";
 import SignIn from "./pages/SignIn";
