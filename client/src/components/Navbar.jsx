@@ -61,7 +61,7 @@ export default function Navbar({ isSignedIn }) {
 
             {isOpen && (
               <div
-                className="absolute right-0 mt-2 w-48 bg-slate-800 rounded-xl border border-slate-700 shadow-lg overflow-hidden z-20"
+                className="absolute right-0 top-full mt-2 w-48 bg-slate-800 rounded-xl border border-slate-700 shadow-lg overflow-hidden z-20"
                 role="menu"
               >
                 <Link
