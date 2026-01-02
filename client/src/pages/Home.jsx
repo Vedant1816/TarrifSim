@@ -1,48 +1,77 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import bg from "../assets/databg.png"
 import { useNavigate } from "react-router-dom";
+import globalAnnual from "../data/globalAnnual.json";
+import domesticProd from "../data/domesticProd.json";
+
+
 
 export default function Home(){
+
+function buildGlobalCPOFallback(globalAnnual) {
+  if (!globalAnnual?.obs?.length) return null;
+
+  const last = globalAnnual.obs[globalAnnual.obs.length - 1];
+  const prev = globalAnnual.obs[globalAnnual.obs.length - 2];
+
+  const val = Number(last.value);
+  const prevVal = Number(prev?.value);
+
+  const pct =
+    prevVal && !Number.isNaN(prevVal)
+      ? ((val - prevVal) / prevVal) * 100
+      : 0;
+
+  return {
+    valueText: `$${Math.round(val)}/MT`,
+    changeText: `${pct.toFixed(1)}% YoY`,
+    direction: pct === 0 ? "flat" : pct > 0 ? "up" : "down",
+    subtitle: String(new Date(last.date).getFullYear()),
+  };
+}
+
+function buildIndiaProd(domesticProd) {
+  if (!domesticProd?.data?.length) return null;
+
+  const last = domesticProd.data[domesticProd.data.length - 1];
+  const prev = domesticProd.data[domesticProd.data.length - 2];
+
+  const val = Number(last.domestic_prod);
+  const prevVal = Number(prev?.domestic_prod);
+
+  const pct =
+    prevVal && !Number.isNaN(prevVal)
+      ? ((val - prevVal) / prevVal) * 100
+      : 0;
+
+  return {
+    valueText: `${val.toLocaleString("en-IN")} MT`,
+    changeText: `${pct.toFixed(1)}% YoY`,
+    direction: pct === 0 ? "flat" : pct > 0 ? "up" : "down",
+    subtitle: String(last.year),
+  };
+}
+const fallbackCPO = useMemo(() => buildGlobalCPOFallback(globalAnnual), []);
+const IndiaProd = useMemo(() => buildIndiaProd(domesticProd), []);
+
+
 const API_URL = import.meta.env.VITE_API_URL;
 const navigate = useNavigate();
 console.log("Home rendered");
 
-const [cpo, setCpo] = useState({
+const [cpo, setCpo] = useState(fallbackCPO || {
   valueText: "-",
   changeText: "-",
   direction: "flat",
   subtitle: "",
 })
 
-const [indiaProd, setProd] = useState({
+const [indiaProd, setProd] = useState(IndiaProd || {
   valueText: "-",
   changeText: "-",
   direction: "flat",
   subtitle: "",
 })
-
-useEffect(() => {
-  (async() => {
-    try{
-     const res = await fetch(`${API_URL}/api/cpo/india-trend`);
-     const data = await res.json();
-
-     const value = data?.value;
-     const pch = data?.pch;
-     const year = data?.year;
-
-     const valueText = value ? `${value} MT` : "-";
-     const changeText = pch ? `${Math.abs(pch).toFixed(2)}%` : "-";
-     const direction = pch == 0 || pch == null ? "flat" : pch > 0 ? "up" : "down";
-     const subtitle = year ? year.replace("(P)", "").trim() : "";
-
-     setProd({valueText, changeText, direction, subtitle});
-
-    }catch(e){
-      console.log("Error fetching india crude oil production from backend", e);
-    }
-  }) ();
-}, []);
 
 useEffect(() => {
   (async() => {
@@ -144,7 +173,7 @@ return (
       }}
     >
       {/* Overlay gradient */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-transparent"></div>
+      <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/60 to-transparent"></div>
 
       {/* Content */}
       <div className="relative z-10 px-6 py-16 text-left ml-0 mr-auto">

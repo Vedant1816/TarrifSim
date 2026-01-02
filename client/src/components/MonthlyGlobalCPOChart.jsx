@@ -1,38 +1,62 @@
 import React, { useEffect, useState, useMemo } from "react";
 import SimulatedChartBlock from "./SimulatedChartBlock";
+import globalMonthly from "../data/globalMonthly.json";
 
 export default function MonthlyGlobalCPOChart({
   worldCpoPrice,
   targetMonth,
 }) {
-  const [baselineData, setBaselineData] = useState([]);
-  const [projectionColor, setProjectionColor] = useState("#16a34a");
+  const API_URL = import.meta.env.VITE_API_URL;
 
-  //  Fetch & normalize baseline ONCE
+  /*  Static fallback */
+  const fallbackBaseline = useMemo(() => {
+    return (globalMonthly?.obs || [])
+      .map((o) => ({
+        date: o.date.slice(0, 7),
+        global_cpo: Number(o.value),
+        projection: null,
+      }))
+      .sort((a, b) => a.date.localeCompare(b.date));
+  }, []);
+
+  /*  State */
+  const [baselineData, setBaselineData] = useState(fallbackBaseline);
+
+  /* API override */
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch(
-          "http://localhost:3000/api/cpo/monthly-trend"
-        );
+        const res = await fetch(`${API_URL}/api/cpo/monthly-trend`);
         const data = await res.json();
 
-        const observations = (data?.obs || [])
+        if (!data?.obs?.length) return;
+
+        const observations = data.obs
           .map((o) => ({
-            date: o.date.slice(0, 7), // YYYY-MM
+            date: o.date.slice(0, 7),
             global_cpo: Number(o.value),
             projection: null,
           }))
           .sort((a, b) => a.date.localeCompare(b.date));
 
         setBaselineData(observations);
-      } catch (e) {
-        console.error("Monthly Global CPO fetch error", e);
+      } catch {
+        console.warn("Monthly Global CPO API failed, using fallback");
       }
     })();
   }, []);
 
-  //  Build ONE unified dataset (baseline + anchored future projection)
+  /* Projection color (derived) */
+  const projectionColor = useMemo(() => {
+    if (!baselineData.length || !worldCpoPrice) return "#16a34a";
+
+    const last = baselineData[baselineData.length - 1];
+    return Number(worldCpoPrice) < last.global_cpo
+      ? "#dc2626"
+      : "#16a34a";
+  }, [baselineData, worldCpoPrice]);
+
+  /* Chart data */
   const chartData = useMemo(() => {
     if (!baselineData.length || !worldCpoPrice || !targetMonth) {
       return baselineData;
@@ -41,25 +65,15 @@ export default function MonthlyGlobalCPOChart({
     const lastIdx = baselineData.length - 1;
     const lastBaseline = baselineData[lastIdx];
 
-    //  Prevent backward or same-month simulation
+    // prevent backward simulation
     if (targetMonth <= lastBaseline.date) {
       return baselineData;
     }
 
     const simulatedValue = Number(worldCpoPrice);
 
-    // Decide red / green
-    setProjectionColor(
-      simulatedValue < lastBaseline.global_cpo
-        ? "#dc2626"
-        : "#16a34a"
-    );
-
-    // Anchor projection at last baseline point
     const anchoredBaseline = baselineData.map((d, i) =>
-      i === lastIdx
-        ? { ...d, projection: d.global_cpo }
-        : d
+      i === lastIdx ? { ...d, projection: d.global_cpo } : d
     );
 
     return [

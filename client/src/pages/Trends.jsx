@@ -16,9 +16,11 @@ import IndianProdChart from "../components/IndianProdChart";
 import PieChart from "../components/PieChart";
 import useScrollVisibility from "../hooks/useScrollVisibility";
 import ChartBlock from "../components/ChartBlock";
+import globalAnnual from "../data/globalAnnual.json";
+import domesticProd from "../data/domesticProd.json";
 // import ChartBlock from "../components/ChartBlock";
 
-/* ---------- MOCK / HELPERS (unchanged) ---------- */
+/* MOCK / HELPERS */
 
 const BCD_DATE = ["Jan-2019", "Oct-2022", "Sept-2024", "May-2025"];
 const BCD = [40, 0, 20, 10];
@@ -35,6 +37,49 @@ function buildAnnualRows() {
   }));
 }
 
+function buildGlobalCPOFallback(globalAnnual) {
+  if (!globalAnnual?.obs?.length) return null;
+
+  const last = globalAnnual.obs[globalAnnual.obs.length - 1];
+  const prev = globalAnnual.obs[globalAnnual.obs.length - 2];
+
+  const val = Number(last.value);
+  const prevVal = Number(prev?.value);
+
+  const pct =
+    prevVal && !Number.isNaN(prevVal)
+      ? ((val - prevVal) / prevVal) * 100
+      : 0;
+
+  return {
+    value: `$${Math.round(val)}/MT`,
+    change: `${pct.toFixed(1)}% YoY`,
+    subtitle: new Date(last.date).getFullYear(),
+    direction: pct === 0 ? "flat" : pct > 0 ? "up" : "down",
+  };
+}
+
+function buildDomesticProd(domesticProd) {
+  if (!domesticProd?.data?.length) return null;
+
+  const last = domesticProd.data[domesticProd.data.length - 1];
+  const prev = domesticProd.data[domesticProd.data.length - 2];
+
+  const val = Number(last.domestic_prod);
+  const prevVal = Number(prev?.domestic_prod);
+
+  const pct =
+    prevVal && !Number.isNaN(prevVal)
+      ? ((val - prevVal) / prevVal) * 100
+      : 0;
+
+  return {
+    value: val,                 
+    change: pct,                
+    subtitle: last.year,
+    direction: pct === 0 ? "flat" : pct > 0 ? "up" : "down",
+  };
+}
 
 
 /* ---------- Simple reveal wrapper ---------- */
@@ -57,15 +102,26 @@ export default function Trends() {
   const rows = useMemo(buildAnnualRows, []);
   const last = rows[rows.length - 1];
   const prev = rows[rows.length - 2];
+  const n1 = globalAnnual?.obs.length;
 
-  const [globalCPO, setGlobalCPO] = React.useState({
-    value: "-",
+  const fallbackGlobalCPO = useMemo(
+  () => buildGlobalCPOFallback(globalAnnual),
+  []
+); 
+
+  const [globalCPO, setGlobalCPO] = React.useState(fallbackGlobalCPO || {
+    value: "",
     change: "-",
     subtitle: "-",
     direction: "flat",
   });
 
-  const [indianProd, setIndianProd] = React.useState({
+  const IndianProdData = useMemo(
+    ()=> buildDomesticProd(domesticProd),
+    []
+  );
+
+  const [indianProd, setIndianProd] = React.useState(IndianProdData || { 
     value: "-",
     change: "-",
     subtitle: "-",
@@ -89,28 +145,6 @@ export default function Trends() {
         setGlobalCPO({ value, change, subtitle, direction });
       } catch (err) {
         console.log("error(frontend) fetching Global CPO data : ", err);
-      }
-    })();
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const res = await fetch("http://localhost:3000/api/cpo/india-trend");
-        const data = await res.json();
-
-        const val = data?.value;
-        const pch = data?.pch;
-        const year = data?.year;
-
-        const value = val ? `${val} MT` : "-";
-        const change = pch ? `${Math.abs(pch).toFixed(2)}%` : "-";
-        const subtitle = year ? year.replace("(P)", "").trim() : "";
-        const direction = pch == 0 || pch == null ? "flat" : pch > 0 ? "up" : "down";
-
-        setIndianProd({ value, change, subtitle, direction });
-      } catch (e) {
-        console.log("Error(frontend) fetching indian cpo prod data ", e);
       }
     })();
   }, []);
@@ -144,7 +178,13 @@ export default function Trends() {
         {/* KPI Cards */}
         <div className="grid lg:grid-cols-5 sm:grid-cols-2 gap-4 mb-8">
           <KPI title="Global CPO Price" value={globalCPO.value} delta={parseFloat(globalCPO.change)} unit="%" direction={globalCPO.direction} />
-          <KPI title="Domestic Production(MT)" value={parseFloat(indianProd.value).toLocaleString("en-IN")} delta={parseFloat(indianProd.change)} unit="%" direction={indianProd.direction} />
+          <KPI
+            title="Domestic Production (MT)"
+            value={`${indianProd.value.toLocaleString("en-IN")} MT`}
+            delta={indianProd.change}
+            unit="%"
+            direction={indianProd.direction}
+         />
           <KPI title="Basic Custom Duty on CPO(India)" value={`${last.bcd.toFixed(1)}%`} delta={dBCD} unit="%" direction={dBCD > 0 ? "up" : dBCD < 0 ? "down" : "flat"} />
         </div>
 
