@@ -1,18 +1,18 @@
 import { useState, useEffect, useMemo } from "react";
 import bg from "../assets/databg.png"
 import { useNavigate } from "react-router-dom";
-import globalAnnual from "../data/globalAnnual.json";
+import globalMonthly from "../data/globalMonthly.json";
 import domesticProd from "../data/domesticProd.json";
 
 
 
 export default function Home(){
 
-function buildGlobalCPOFallback(globalAnnual) {
-  if (!globalAnnual?.obs?.length) return null;
+function buildGlobalCPOFallback(globalMonthly) {
+  if (!globalMonthly?.obs?.length) return null;
 
-  const last = globalAnnual.obs[globalAnnual.obs.length - 1];
-  const prev = globalAnnual.obs[globalAnnual.obs.length - 2];
+  const last = globalMonthly.obs[globalMonthly.obs.length - 1];
+  const prev = globalMonthly.obs[globalMonthly.obs.length - 2];
 
   const val = Number(last.value);
   const prevVal = Number(prev?.value);
@@ -51,7 +51,7 @@ function buildIndiaProd(domesticProd) {
     subtitle: String(last.year),
   };
 }
-const fallbackCPO = useMemo(() => buildGlobalCPOFallback(globalAnnual), []);
+const fallbackCPO = useMemo(() => buildGlobalCPOFallback(globalMonthly), []);
 const IndiaProd = useMemo(() => buildIndiaProd(domesticProd), []);
 
 
