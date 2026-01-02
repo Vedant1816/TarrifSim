@@ -16,7 +16,7 @@ import IndianProdChart from "../components/IndianProdChart";
 import PieChart from "../components/PieChart";
 import useScrollVisibility from "../hooks/useScrollVisibility";
 import ChartBlock from "../components/ChartBlock";
-import globalAnnual from "../data/globalAnnual.json";
+import globalMonthly from "../data/globalMonthly.json";
 import domesticProd from "../data/domesticProd.json";
 // import ChartBlock from "../components/ChartBlock";
 
@@ -37,11 +37,11 @@ function buildAnnualRows() {
   }));
 }
 
-function buildGlobalCPOFallback(globalAnnual) {
-  if (!globalAnnual?.obs?.length) return null;
+function buildGlobalCPOFallback(globalMonthly) {
+  if (!globalMonthly?.obs?.length) return null;
 
-  const last = globalAnnual.obs[globalAnnual.obs.length - 1];
-  const prev = globalAnnual.obs[globalAnnual.obs.length - 2];
+  const last = globalMonthly.obs[globalMonthly.obs.length - 1];
+  const prev = globalMonthly.obs[globalMonthly.obs.length - 2];
 
   const val = Number(last.value);
   const prevVal = Number(prev?.value);
@@ -102,10 +102,9 @@ export default function Trends() {
   const rows = useMemo(buildAnnualRows, []);
   const last = rows[rows.length - 1];
   const prev = rows[rows.length - 2];
-  const n1 = globalAnnual?.obs.length;
 
   const fallbackGlobalCPO = useMemo(
-  () => buildGlobalCPOFallback(globalAnnual),
+  () => buildGlobalCPOFallback(globalMonthly),
   []
 ); 
 

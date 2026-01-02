@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { User, LogOut, Settings } from "lucide-react";
+import { User, LogOut, Settings, Menu, X } from "lucide-react";
 import { supabase } from "../supabaseClient";
 import logo from "../assets/logo.png";
 
 export default function Navbar({ isSignedIn }) {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+
 
   const handleLogout = async () => {
     try {
@@ -21,20 +23,28 @@ export default function Navbar({ isSignedIn }) {
   return (
     <div className="h-16 w-full bg-black flex items-center text-white justify-between px-4">
       {/* Logo */}
-      <div className="flex items-center gap-2">
+      <Link to="/" className="flex items-center gap-2 hover:opacity-90 transition">
         <img src={logo} alt="Tariff Sim Logo" className="h-12 w-12" />
         <span className="font-semibold text-lg tracking-wide">TariffSim</span>
-      </div>
+      </Link>
 
       {/* Links */}
-      <div className="flex items-center gap-8 text-white">
-        <Link to="/" className="hover:text-indigo-400 transition-colors">Home</Link>
-        <Link to="/trends" className="hover:text-indigo-400 transition-colors">Trends</Link>
-        <Link to="/dashboard" className="hover:text-indigo-400 transition-colors">Dashboard</Link>
+      <div className="hidden md:flex items-center gap-8 text-white">
+         <Link to="/" className="hover:text-indigo-400 transition-colors">Home</Link>
+         <Link to="/trends" className="hover:text-indigo-400 transition-colors">Trends</Link>
+         <Link to="/dashboard" className="hover:text-indigo-400 transition-colors">Dashboard</Link>
       </div>
+      {/* Right side */}      
+      <div className="relative flex items-center gap-3">
+        {/* Mobile button */}
+        <button
+       onClick={() => setIsMobileOpen(!isMobileOpen)}
+       className="md:hidden! text-white! focus:outline-none! bg-transparent! p-1!"
+       aria-label="Open menu"
+      >
 
-      {/* Right side */}
-      <div className="relative">
+         {isMobileOpen ? <X size={24} /> : <Menu size={24} />}
+      </button>
         {isSignedIn ? (
           <>
             <button
@@ -82,6 +92,32 @@ export default function Navbar({ isSignedIn }) {
           </Link>
         )}
       </div>
+      {isMobileOpen && (
+         <div className="absolute top-16 left-0 w-full bg-slate-900 border-t border-slate-700 md:hidden z-30">
+           <Link
+            to="/"
+            onClick={() => setIsMobileOpen(false)}
+            className="block px-4 py-3 text-white hover:bg-slate-800"
+           >
+             Home
+           </Link>
+           <Link
+            to="/trends"
+            onClick={() => setIsMobileOpen(false)}
+            className="block px-4 py-3 text-white hover:bg-slate-800"
+           >
+            Trends
+           </Link>
+           <Link
+            to="/dashboard"
+            onClick={() => setIsMobileOpen(false)}
+            className="block px-4 py-3 text-white hover:bg-slate-800"
+           >
+            Dashboard
+           </Link>
+         </div>
+        )}
+
     </div>
   );
 }
