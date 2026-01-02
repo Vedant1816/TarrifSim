@@ -86,7 +86,7 @@ export default function Navbar({ isSignedIn }) {
         ) : (
           <Link to="/signin" className="flex items-center gap-2 group">
             <User className="w-6 h-6 text-slate-300 group-hover:text-indigo-400 transition-colors" />
-            <span className="hidden sm:inline text-sm text-slate-300 group-hover:text-indigo-400 transition-colors">
+            <span className="inline text-sm text-slate-300 group-hover:text-indigo-400 transition-colors">
               Log In
             </span>
           </Link>
