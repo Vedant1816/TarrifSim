@@ -33,7 +33,7 @@ export default function Navbar({ isSignedIn }) {
          <Link to="/" className="hover:text-indigo-400 transition-colors">Home</Link>
          <Link to="/input" className="hover:text-indigo-400 transition-colors">Simulate</Link>
          <Link to="/trends" className="hover:text-indigo-400 transition-colors">Trends</Link>
-         <Link to="/dashboard" className="hover:text-indigo-400 transition-colors">Dashboar</Link>
+         <Link to="/dashboard" className="hover:text-indigo-400 transition-colors">Dashboard</Link>
          <Link to="/NMEOP" className="hover:text-indigo-400 transition-colors">NMEOP</Link>
       </div>
       {/* Right side */}      
