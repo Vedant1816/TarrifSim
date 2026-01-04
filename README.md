@@ -35,13 +35,12 @@ The project combines a modern frontend, a robust backend, and an ML pipeline to 
 ### Frontend
 - React (Vite)
 - Tailwind CSS
-- Supabase Authentication
+- Supabase Auth
 - Deployment: Vercel
 
 ### Backend
 - Node.js
 - Express
-- JWT Authentication
 - Supabase (Database & Admin access)
 - Deployment: Render
 
@@ -73,7 +72,6 @@ Create a `.env` file inside the `client` folder:
 ```env
 NODE_ENV=development
 PORT=3000
-JWT_SECRET=your_jwt_secret
 FRED_API_KEY=your_fred_api_key
 CURRENCY_API_KEY=your_currencyfreaks_api_key
 GEMINI_API_KEY=your_gemini_api_key
