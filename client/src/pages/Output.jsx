@@ -356,7 +356,7 @@ function downloadPdfFromData({ inputs, outputs, currentValues, summary }) {
               <button
               onClick={generateSummary}
               disabled={isGenerating}
-              className="!px-2.5 !py-1 !rounded-lg border !border-slate-900 !text-slate-900 hover:!bg-slate-900 hover:!text-white transition disabled:!opacity-50"
+              className="px-6! py-2! rounded-xl! border! border-slate-800! bg-white! text-slate-900! font-medium! hover:bg-slate-900! hover:text-white! transition-colors"
               >
                {isGenerating ? "Generating.." : summary ? "Regenerate" : "Generate"}
               </button>
@@ -384,7 +384,7 @@ function downloadPdfFromData({ inputs, outputs, currentValues, summary }) {
         
         <div className="flex gap-3">
           <button
-            className="!px-6 !py-2 !rounded-xl !border-1 !border-slate-800 !bg-white !text-slate-900 !font-medium hover:!bg-slate-900 hover:!text-white transition-colors"
+            className="px-6! py-2! rounded-xl! border! border-slate-800! bg-white! text-slate-900! font-medium! hover:bg-slate-900! hover:text-white! transition-colors"
             onClick={() =>
             downloadPdfFromData({
             inputs,
@@ -398,7 +398,7 @@ function downloadPdfFromData({ inputs, outputs, currentValues, summary }) {
          </button>
          <button
             onClick={() => navigate("/")}
-            className="!px-6 !py-2 !rounded-xl !border-1 !border-slate-800 !bg-white !text-slate-900 !font-medium hover:!bg-slate-900 hover:!text-white transition-colors">
+            className="px-6! py-2! rounded-xl! border! border-slate-800! bg-white! text-slate-900! font-medium! hover:bg-slate-900! hover:text-white! transition-colors">
            Simulate Again
          </button>
 

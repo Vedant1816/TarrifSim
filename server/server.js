@@ -5,7 +5,6 @@ import cookieParser from "cookie-parser";
 import signUpRoute from "./signUp.js"
 import { requireAuth } from "./authMiddleware.js";
 import cpoRoute from "./cpoRoutes.js";
-import indiaData from "./indiaData.js";
 import simulateRoutes from "./simulateRoutes.js";
 import summary from "./summary.js"
 import fx from "./fx.js"
@@ -38,8 +37,6 @@ app.get("/api/auth/me", requireAuth, (req, res) => {
 });
 
 app.use("/api/cpo", cpoRoute);
-
-app.use("/api/cpo", indiaData);
 
 app.use("/api/simulate", simulateRoutes);
 
