@@ -31,6 +31,7 @@ export default function Navbar({ isSignedIn }) {
       {/* Links */}
       <div className="hidden md:flex items-center gap-8 text-white">
          <Link to="/" className="hover:text-indigo-400 transition-colors">Home</Link>
+         <Link to="/input" className="hover:text-indigo-400 transition-colors">Simulate</Link>
          <Link to="/trends" className="hover:text-indigo-400 transition-colors">Trends</Link>
          <Link to="/dashboard" className="hover:text-indigo-400 transition-colors">Dashboard</Link>
          <Link to="/NMEOP" className="hover:text-indigo-400 transition-colors">NMEOP</Link>
@@ -101,6 +102,13 @@ export default function Navbar({ isSignedIn }) {
             className="block px-4 py-3 text-white hover:bg-slate-800"
            >
              Home
+           </Link>
+           <Link
+            to="/input"
+            onClick={() => setIsMobileOpen(false)}
+            className="block px-4 py-3 text-white hover:bg-slate-800"
+           >
+             Simulate
            </Link>
            <Link
             to="/trends"
