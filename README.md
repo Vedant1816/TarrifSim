@@ -181,7 +181,7 @@ nodemon index.js
 The backend runs on:
 http://localhost:3000
 
-If the backend uses ML prediction scripts, ensure the Python virtual environment is active.
+The backend uses ML prediction scripts ao ensure the Python virtual environment is active.
 
 ---
 
