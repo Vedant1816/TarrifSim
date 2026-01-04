@@ -1,7 +1,6 @@
 import express from "express";
 const router = express.Router();
 
-// Your secret FRED key from .env
 const FRED_KEY = process.env.FRED_API_KEY;
 if (!FRED_KEY) {
   console.error("! Missing FRED_API_KEY in .env");
@@ -31,7 +30,7 @@ async function getJson(url) {
 // ---- ROUTE: returns both price + MoM change ----
 router.get("/trend", async (_req, res) => {
   try {
-    // 1️⃣ latest price
+    //  latest price
     const latestData = await getJson(
       fredUrl(SERIES_MONTHLY,{ limit: "1", sort_order: "desc" })
     );
@@ -41,7 +40,7 @@ router.get("/trend", async (_req, res) => {
       latestObs?.value && latestObs.value !== "." ? Number(latestObs.value) : null;
     const date = latestObs?.date ?? null;
 
-    // 2️⃣ month-over-month % change
+    //  month-over-month % change
     const momData = await getJson(
       fredUrl(SERIES_MONTHLY,{ units: "pch", limit: "1", sort_order: "desc" })
     );
@@ -49,7 +48,7 @@ router.get("/trend", async (_req, res) => {
     const percentChange =
       momObs?.value && momObs.value !== "." ? Number(momObs.value) : null;
 
-    // 3️⃣ send clean JSON
+    //  send clean JSON
     res.json({
       date,                           
       value_usd_per_metric_ton: value, 

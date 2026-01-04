@@ -1,12 +1,58 @@
 import CurrData from "../data/currData.json"
+import currGlobal from "../data/currGlobal.json"
+import { useState, useEffect } from "react";
+import { apiFetch } from "../apiFetch";
+import bcdData from "../data/bcdData.json";
+
 export default function Dashboard(){
     const currValues = CurrData.values ?? {};
+    const API_URL = import.meta.env.VITE_API_URL;
     const LABELS = {
         imports_mt: "Imports (MT)",
         domestic_retail_rs_per_kg: "Domestic Retail Price (₹/kg)",
         farmgate_ffb_rs_per_kg: "Farmgate FFB Price (₹/kg)",
         domesticProd: "Domestic Production (MT)",
     }
+    const [fx, setFx] = useState(null);
+    const [fxLoading, setFxLoading] = useState(true);
+
+    const [globalPrice, setGlobalPrice] = useState(currGlobal.values.global_price.toFixed(2));//Fallback in case of API fetch failure
+    useEffect(() => { //API override
+      (async() => {
+        try{
+          const res = await fetch(`${API_URL}/api/cpo/trend`);
+          const data = await res.json();
+          const val = data?.value_usd_per_metric_ton;
+          setGlobalPrice(val.toFixed(2))
+        }catch(err){
+          console.log("Error fetching global cpo current trend ", err);
+        }})(); }, [])
+
+      useEffect(() => {
+      (async () => {
+       try {
+      setFxLoading(true);
+
+      const res = await apiFetch(`${API_URL}/api/fx/current`);
+      const data = await res.json();
+      const val = data?.value;
+
+      if (typeof val === "number") {
+        setFx(val.toFixed(2));
+      } else {
+        setFx("—");
+      }
+    } catch (err) {
+      console.log("Error fetching fx ", err);
+      setFx("—");
+    } finally {
+      setFxLoading(false);
+    }
+  })();
+}, []);
+
+      
+        
     return(
           <div className="min-h-screen bg-slate-100 p-6">
                <div className="max-w-4xl mx-auto space-y-6">
@@ -31,10 +77,10 @@ export default function Dashboard(){
                    <tbody>
                       <tr>
                         <td className="py-3 text-slate-700">
-                           Global Price
+                           Global Price($/MT)
                         </td>
                         <td className="py-3 text-right">
-                            2
+                            {globalPrice}
                         </td>
                       </tr>
                       <tr>
@@ -42,15 +88,22 @@ export default function Dashboard(){
                             Foreign Exchange(USD per INR)
                         </td>
                         <td className="py-3 text-right">
-                            4
+                         {fxLoading ? (
+                           <span className="inline-flex items-center gap-2 text-slate-400">
+                             <span className="w-3 h-3 border-2 border-slate-300 border-t-slate-600 rounded-full animate-spin" />
+                             Loading…
+                           </span>
+                           ) : (
+                              fx
+                           )}
                         </td>
                       </tr>
                       <tr>
                         <td className="py-3 text-slate-700">
-                            Global Production
+                            Global Production(MT)
                         </td>
                         <td className="py-3 text-right">
-                            6
+                            {currGlobal.values.global_prod}
                         </td>
                       </tr>
                    </tbody>
@@ -83,10 +136,10 @@ export default function Dashboard(){
                       ))}
                       <tr>
                         <td className="py-3 text-slate-700">
-                            Basic Custom Duty
+                            Basic Custom Duty(%)
                         </td>
                         <td className="py-3 text-right">
-                            10%
+                            {bcdData.obs[bcdData.obs.length - 1].bcd}
                         </td>
                       </tr>
                    </tbody>

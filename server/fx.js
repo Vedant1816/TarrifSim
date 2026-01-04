@@ -1,5 +1,6 @@
 import express from "express";
 const router = express.Router();
+import { requireAuth } from "./authMiddleware.js";
 
 const API_KEY = process.env.CURRENCY_API_KEY;
 if(!API_KEY){
@@ -30,4 +31,29 @@ async function get_fx() {
     };
 }
 
+/* Route */
+router.get("/fx/current", requireAuth, async (req, res) => {
+  try {
+    const fx = await get_fx();
+
+    if (!fx) {
+      return res.status(502).json({
+        message: "Failed to fetch FX data",
+      });
+    }
+
+    res.json({
+      base: "USD",
+      quote: "INR",
+      ...fx,
+    });
+  } catch (err) {
+    console.error("FX route error:", err);
+    res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+});
+
+export default router;
 export { get_fx };

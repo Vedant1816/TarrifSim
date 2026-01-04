@@ -3,10 +3,38 @@ import bg from "../assets/databg.png"
 import { useNavigate } from "react-router-dom";
 import globalMonthly from "../data/globalMonthly.json";
 import domesticProd from "../data/domesticProd.json";
-
-
+import bcdData from "../data/bcdData.json";
 
 export default function Home(){
+
+function buildBCDCard(bcdData) {
+  if (!bcdData?.obs?.length) return null;
+
+  const last = bcdData.obs[bcdData.obs.length - 1];
+  const prev = bcdData.obs[bcdData.obs.length - 2];
+
+  const val = Number(last.bcd);
+  const prevVal = Number(prev?.bcd);
+
+  const delta =
+    prevVal !== undefined && !Number.isNaN(prevVal)
+      ? val - prevVal
+      : 0;
+
+  return {
+    valueText: `${val.toFixed(1)}%`,
+    changeText:
+      delta === 0
+        ? "No change"
+        : `${delta > 0 ? "+" : ""}${delta.toFixed(1)} %`,
+    direction: delta === 0 ? "flat" : delta > 0 ? "up" : "down",
+    subtitle: new Date(last.date).toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    }),
+  };
+}
 
 function buildGlobalCPOFallback(globalMonthly) {
   if (!globalMonthly?.obs?.length) return null;
@@ -24,9 +52,14 @@ function buildGlobalCPOFallback(globalMonthly) {
 
   return {
     valueText: `$${Math.round(val)}/MT`,
-    changeText: `${pct.toFixed(1)}% YoY`,
+    changeText: `${pct.toFixed(1)}% `,
     direction: pct === 0 ? "flat" : pct > 0 ? "up" : "down",
-    subtitle: String(new Date(last.date).getFullYear()),
+    subtitle : last.date
+          ? new Date(last.date).toLocaleString("en-IN", {
+              month: "short",
+              year: "2-digit",
+            })
+          : "",
   };
 }
 
@@ -53,7 +86,7 @@ function buildIndiaProd(domesticProd) {
 }
 const fallbackCPO = useMemo(() => buildGlobalCPOFallback(globalMonthly), []);
 const IndiaProd = useMemo(() => buildIndiaProd(domesticProd), []);
-
+const bcdCard = useMemo(() => buildBCDCard(bcdData), []);
 
 const API_URL = import.meta.env.VITE_API_URL;
 const navigate = useNavigate();
@@ -206,11 +239,12 @@ return (
 
 <TrendCard
   title="Basic Custom Duty On CPO (India)"
-  value="10%"
-  change="10%"
-  direction="down"
-  subtitle="30 May 2025"
+  value={bcdCard?.valueText ?? "-"}
+  change={bcdCard?.changeText ?? "-"}
+  direction={bcdCard?.direction ?? "flat"}
+  subtitle={bcdCard?.subtitle ?? ""}
 />
+
 
 {/* <TrendCard
   title="Farmer FFB Price (indicative)"

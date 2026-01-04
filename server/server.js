@@ -8,6 +8,7 @@ import cpoRoute from "./cpoRoutes.js";
 import indiaData from "./indiaData.js";
 import simulateRoutes from "./simulateRoutes.js";
 import summary from "./summary.js"
+import fx from "./fx.js"
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -42,7 +43,9 @@ app.use("/api/cpo", indiaData);
 
 app.use("/api/simulate", simulateRoutes);
 
-app.use("/api/summary", summary)
+app.use("/api/summary", summary);
+
+app.use("/api", fx);
 
 app.listen(port, () => {
   console.log(` Server running on http://localhost:${port}`);

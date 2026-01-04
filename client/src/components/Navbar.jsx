@@ -33,6 +33,7 @@ export default function Navbar({ isSignedIn }) {
          <Link to="/" className="hover:text-indigo-400 transition-colors">Home</Link>
          <Link to="/trends" className="hover:text-indigo-400 transition-colors">Trends</Link>
          <Link to="/dashboard" className="hover:text-indigo-400 transition-colors">Dashboard</Link>
+         <Link to="/NMEOP" className="hover:text-indigo-400 transition-colors">NMEOP</Link>
       </div>
       {/* Right side */}      
       <div className="relative flex items-center gap-3">
@@ -54,9 +55,9 @@ export default function Navbar({ isSignedIn }) {
               aria-expanded={isOpen}
             >
               <User className="w-6 h-6 text-black group-hover:text-indigo-400 transition-colors" />
-              <span className="hidden sm:inline text-sm text-black group-hover:text-indigo-400 transition-colors">
+              {/* <span className="hidden sm:inline text-sm text-black group-hover:text-indigo-400 transition-colors">
                 Profile
-              </span>
+              </span> */}
             </button>
 
             {isOpen && (
@@ -64,14 +65,14 @@ export default function Navbar({ isSignedIn }) {
                 className="absolute right-0 top-full mt-2 w-48 bg-slate-800 rounded-xl border border-slate-700 shadow-lg overflow-hidden z-20"
                 role="menu"
               >
-                <Link
+                {/* <Link
                   to="/profile"
                   onClick={() => setIsOpen(false)}
                   className="block px-4 py-2 text-sm text-slate-200 hover:bg-slate-700 transition"
                   role="menuitem"
                 >
                   <Settings className="inline w-4 h-4 mr-2" /> Account Settings
-                </Link>
+                </Link> */}
 
                 <button
                   onClick={handleLogout}
@@ -114,6 +115,13 @@ export default function Navbar({ isSignedIn }) {
             className="block px-4 py-3 text-white hover:bg-slate-800"
            >
             Dashboard
+           </Link>
+           <Link
+            to="/NMEOP"
+            onClick={() => setIsMobileOpen(false)}
+            className="block px-4 py-3 text-white hover:bg-slate-800"
+           >
+            NMEOP
            </Link>
          </div>
         )}

@@ -1,0 +1,9 @@
+{
+    "obs" :  [
+    { "name": "Palm Oil", "value": 31.5 },
+    { "name": "Soybean Oil", "value": 28 },
+    { "name": "Sunflower Oil", "value": 17.5 },
+    { "name": "Mustard Oil", "value": 12.5 },
+    { "name": "Others", "value": 10.5 }
+    ]
+}

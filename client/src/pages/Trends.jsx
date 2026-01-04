@@ -18,23 +18,17 @@ import useScrollVisibility from "../hooks/useScrollVisibility";
 import ChartBlock from "../components/ChartBlock";
 import globalMonthly from "../data/globalMonthly.json";
 import domesticProd from "../data/domesticProd.json";
+import bcdData from "../data/bcdData.json";
+import retailOilShareData from "../data/retailOilShare.json";
 // import ChartBlock from "../components/ChartBlock";
 
 /* MOCK / HELPERS */
-
-const BCD_DATE = ["Jan-2019", "Oct-2022", "Sept-2024", "May-2025"];
-const BCD = [40, 0, 20, 10];
-
-
 const fmtINR = (n) => (typeof n === "number" ? `₹${n.toLocaleString("en-IN")}` : n);
 const fmtUSD = (n) => (typeof n === "number" ? `$${n.toLocaleString("en-US")}` : n);
 const fmtPct = (n) => (typeof n === "number" ? `${n.toFixed(1)}%` : n);
 
 function buildAnnualRows() {
-  return BCD_DATE.map((year, i) => ({
-    date: year,
-    bcd: BCD[i],
-  }));
+  return bcdData.obs;
 }
 
 function buildGlobalCPOFallback(globalMonthly) {
@@ -154,14 +148,7 @@ export default function Trends() {
       : 0;
 
   const dBCD = last.bcd - prev.bcd;
-
-  const retailOilShare = [
-    { name: "Palm Oil", value: 31.5 },
-    { name: "Soybean Oil", value: 28 },
-    { name: "Sunflower Oil", value: 17.5 },
-    { name: "Mustard Oil", value: 12.5 },
-    { name: "Others", value: 10.5 },
-  ];
+  const retailOilShare = retailOilShareData.obs;
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 p-6">
