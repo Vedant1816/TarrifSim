@@ -51,14 +51,11 @@ export default function Navbar({ isSignedIn }) {
           <>
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="flex items-center gap-2 group focus:outline-none"
+              className="flex! items-center! gap-2! group! focus:outline-none! bg-white!"
               aria-haspopup="menu"
               aria-expanded={isOpen}
             >
               <User className="w-6 h-6 text-black group-hover:text-indigo-400 transition-colors" />
-              {/* <span className="hidden sm:inline text-sm text-black group-hover:text-indigo-400 transition-colors">
-                Profile
-              </span> */}
             </button>
 
             {isOpen && (
