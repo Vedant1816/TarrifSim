@@ -167,7 +167,7 @@ export default function DataInput() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className={`px-5! py-3! rounded-2xl! text-black! font-semibold! shadow! transition! ${
+                className={`px-5! py-3! rounded-2xl! bg-white! text-black! font-semibold! shadow! transition! ${
                   isLoading
                     &&  "cursor-not-allowed!"
                 }`}
