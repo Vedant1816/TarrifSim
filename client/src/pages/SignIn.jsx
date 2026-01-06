@@ -87,10 +87,9 @@ export default function SignIn() {
             <button
               type="submit"
               disabled={isBusy}
-              className={`flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-black ${
+              className={`flex! w-full! justify-center! rounded-md! px-3! py-2! font-semibold! text-black! bg-white! ${
                 isBusy
-                  ? "bg-indigo-500/70 cursor-not-allowed"
-                  : "bg-indigo-500 hover:bg-indigo-400"
+                  && "cursor-not-allowed!"
               }`}
             >
               {isBusy ? "Signing in..." : "Sign In"}

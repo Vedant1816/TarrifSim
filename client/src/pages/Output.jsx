@@ -215,7 +215,7 @@ function downloadPdfFromData({ inputs, outputs, currentValues, summary }) {
             Inputs
           </h2>
 
-          <div className="overflow-x-auto">
+          <div className="hidden md:block overflow-x-auto">
              <table className="w-full text-sm border-collapse">
                <thead>
                  <tr className="border-b text-slate-500">
@@ -246,6 +246,28 @@ function downloadPdfFromData({ inputs, outputs, currentValues, summary }) {
              </tbody>
             </table>
           </div>
+          {/* Mobile Inputs (stacked) */}
+           <div className="md:hidden space-y-4">
+            {Object.entries(inputs).map(([key, value]) => {
+              if (!["bcd", "monthsAhead", "targetYear"].includes(key)) return null;
+
+              return (
+               <div
+                key={key}
+                className="bg-slate-50 rounded-xl p-4 border"
+               >
+               <h3 className="text-sm font-semibold text-slate-700">
+                {INPUT_LABELS[key]}
+               </h3>
+
+               <p className="mt-2 text-right text-slate-900 font-mono">
+                {value}
+               </p>
+              </div>
+               );
+              })}
+           </div>
+
         </section>
 
         <section className="bg-white rounded-2xl shadow p-6">
@@ -253,7 +275,7 @@ function downloadPdfFromData({ inputs, outputs, currentValues, summary }) {
               Market Assumptions
            </h2>
 
-           <div className="overflow-x-auto">
+           <div className="hidden md:block overflow-x-auto">
              <table className="w-full text-sm border-collapse">
                <thead>
                  <tr className="border-b text-slate-500">
@@ -283,7 +305,29 @@ function downloadPdfFromData({ inputs, outputs, currentValues, summary }) {
                 })}
              </tbody>
             </table>
+          </div> 
+          {/* Mobile Market Assumptions */}
+          <div className="md:hidden space-y-4">
+            {Object.entries(inputs).map(([key, value]) => {
+              if (!["worldPrice", "fxRate"].includes(key)) return null;
+
+              return (
+                <div
+                  key={key}
+                  className="bg-slate-50 rounded-xl p-4 border"
+                >
+                  <h3 className="text-sm font-semibold text-slate-700">
+                    {INPUT_LABELS[key]}
+                  </h3>
+
+                  <p className="mt-2 text-right text-slate-900 font-mono">
+                    {value.toFixed(2)}
+                  </p>
+                </div>
+              );
+            })}
           </div>
+
         </section>   
 
         {/* Outputs Section */}
@@ -292,7 +336,7 @@ function downloadPdfFromData({ inputs, outputs, currentValues, summary }) {
               Expected Results
            </h2>
 
-         <div className="overflow-x-auto">
+         <div className="hidden md:block overflow-x-auto">
              <table className="w-full text-sm border-collapse">
                <thead>
                  <tr className="border-b text-slate-500">
@@ -330,6 +374,36 @@ function downloadPdfFromData({ inputs, outputs, currentValues, summary }) {
              </tbody>
             </table>
          </div>
+         {/* Mobile Expected Results */}
+          <div className="md:hidden space-y-4">
+            {Object.entries(outputs).map(([key, value]) => (
+              <div
+                key={key}
+                className="bg-slate-50 rounded-xl p-4 border"
+              >
+                <h3 className="text-sm font-semibold text-slate-700 mb-3">
+                  {OUTPUT_LABELS[key] ?? key}
+                </h3>
+
+                <div className="flex justify-between text-sm mb-1">
+                  <span className="text-slate-500">Current</span>
+                  <span className="font-mono text-slate-700">
+                    {currentValues[key] != null
+                      ? currentValues[key].toLocaleString("en-IN")
+                      : "—"}
+                  </span>
+                </div>
+
+                <div className="flex justify-between text-sm">
+                  <span className="text-slate-500">Expected</span>
+                  <span>
+                    {renderExpectedValue(currentValues[key], value)}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+
        </section>
 
         <RevealOnScroll>
