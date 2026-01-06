@@ -255,7 +255,7 @@ return (
 /> */}
 
     </div>
-      <button onClick={() => navigate("/input")} className="text-black text-6xl mt-4 h-16">Simulate Now!</button>
+      <button onClick={() => navigate("/input")} className="text-black! mt-4! h-16! bg-white!">Simulate Now!</button>
       </div>
     </section>
   );

@@ -167,10 +167,9 @@ export default function DataInput() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className={`px-5 py-3 rounded-2xl text-black font-semibold shadow transition ${
+                className={`px-5! py-3! rounded-2xl! text-black! font-semibold! shadow! transition! ${
                   isLoading
-                    ? "bg-emerald-600/70 cursor-not-allowed"
-                    : "bg-emerald-600 hover:bg-emerald-700"
+                    &&  "cursor-not-allowed!"
                 }`}
               >
                 {isLoading ? "Simulating…" : "Save & Simulate"}
@@ -180,7 +179,7 @@ export default function DataInput() {
                 type="button"
                 onClick={clearAll}
                 disabled={isLoading}
-                className="px-5 py-3 rounded-2xl bg-white border shadow hover:bg-slate-50 disabled:opacity-60 disabled:cursor-not-allowed"
+                className="px-5! py-3! rounded-2xl! bg-white! border! shadow! hover:bg-slate-50! disabled:opacity-60! disabled:cursor-not-allowed!"
               >
                 Clear
               </button>
