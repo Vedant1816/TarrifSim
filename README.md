@@ -52,6 +52,12 @@ Implemented in Python and integrated with the backend for predictions.
 
 ---
 
+## 🐬 Setup with Docker(Recommended)
+- Set up compose.yaml file by filling in the empty environment variables
+- Run docker compose up --build
+
+---
+
 ## 🔐 Environment Variables
 
 ### 📁 `client/.env`
