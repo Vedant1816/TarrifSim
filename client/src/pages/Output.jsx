@@ -237,7 +237,7 @@ function downloadPdfFromData({ inputs, outputs, currentValues, summary }) {
                  </td>
 
                  {/* New value */}
-                 <td className="py-3 text-right">
+                 <td className="py-3 text-right text-black">
                     {value}
                  </td>
                </tr>)}
@@ -297,7 +297,7 @@ function downloadPdfFromData({ inputs, outputs, currentValues, summary }) {
                  </td>
 
                  {/* New value */}
-                 <td className="py-3 text-right">
+                 <td className="py-3 text-right text-black">
                     {value.toFixed(2)}
                  </td>
                </tr>)}

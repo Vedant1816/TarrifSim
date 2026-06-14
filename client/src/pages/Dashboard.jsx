@@ -79,7 +79,7 @@ export default function Dashboard(){
                         <td className="py-3 text-slate-700">
                            Global Price($/MT)
                         </td>
-                        <td className="py-3 text-right">
+                        <td className="py-3 text-right text-black">
                             {globalPrice}
                         </td>
                       </tr>
@@ -87,7 +87,7 @@ export default function Dashboard(){
                         <td className="py-3 text-slate-700">
                             Foreign Exchange(USD per INR)
                         </td>
-                        <td className="py-3 text-right">
+                        <td className="py-3 text-right text-black">
                          {fxLoading ? (
                            <span className="inline-flex items-center gap-2 text-slate-400">
                              <span className="w-3 h-3 border-2 border-slate-300 border-t-slate-600 rounded-full animate-spin" />
@@ -102,7 +102,7 @@ export default function Dashboard(){
                         <td className="py-3 text-slate-700">
                             Global Production(MT)
                         </td>
-                        <td className="py-3 text-right">
+                        <td className="py-3 text-right text-black">
                             {currGlobal.values.global_prod}
                         </td>
                       </tr>
@@ -129,7 +129,7 @@ export default function Dashboard(){
                             <td className="py-3 text-slate-700">
                                {LABELS[k]}
                             </td>
-                            <td className="py-3 text-right">
+                            <td className="py-3 text-right text-black">
                                {v.toLocaleString("en-IN")}
                             </td>
                         </tr>
@@ -138,7 +138,7 @@ export default function Dashboard(){
                         <td className="py-3 text-slate-700">
                             Basic Custom Duty(%)
                         </td>
-                        <td className="py-3 text-right">
+                        <td className="py-3 text-right text-black">
                             {bcdData.obs[bcdData.obs.length - 1].bcd}
                         </td>
                       </tr>
