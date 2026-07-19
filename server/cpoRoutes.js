@@ -8,7 +8,7 @@ if (!FRED_KEY) {
 }
 
 const BASE = "https://api.stlouisfed.org/fred/series/observations";
-const SERIES_MONTHLY = "PPOILUSDM"; // Global Palm Oil price (USD/MT)
+const SERIES_MONTHLY = "PPOILUSDM"; // Global Palm Oil price (USD/MT) 
 const SERIES_ANNUAL = "PPOILUSDA";
 
 // Simple helper to build a FRED API URL

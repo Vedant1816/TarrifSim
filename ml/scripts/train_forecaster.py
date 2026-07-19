@@ -9,7 +9,8 @@ import pandas as pd
 
 from src.forecaster import train_forecaster
 
-DATA_PATH = "data/palm_oil_training_dataset.csv"
+DATA_PATH = os.path.join(ROOT_DIR, "data", "palm_oil_training_dataset.csv")
+
 
 df = pd.read_csv(DATA_PATH)
 
