@@ -84,7 +84,7 @@ router.get("/", requireAuth, async (req, res) => {
    try{
       const bcd = Number(req.query.bcd);
       const targetDateStr = req.query.targetDate;
-      let monthsAhead = null;
+      let monthsAhead = 1;
       let targetYear = new Date().getFullYear();
       if (targetDateStr !== undefined) {
           const targetDate = parseDate(targetDateStr);
@@ -103,20 +103,17 @@ router.get("/", requireAuth, async (req, res) => {
           if (monthsAhead < 0) {
              return res.status(400).json({ error: "targetDate must be in the future" });
           }
+          monthsAhead++;
        }
 
       if (Number.isNaN(bcd)) {
         return res.status(400).json({ error: "Invalid or missing BCD value" });
       }
-
-      if (monthsAhead !== null && (Number.isNaN(monthsAhead) || monthsAhead < 0)) {
-        return res.status(400).json({ error: "monthsAhead must be >= 0" });
-      }
       
       let worldPrice;
       let fxRate;
 
-      if (monthsAhead === null || monthsAhead === 0) {
+      if (monthsAhead === 1) {
       // current FX
       const fxData = await get_fx();
       if (!fxData) {
@@ -132,43 +129,19 @@ router.get("/", requireAuth, async (req, res) => {
       fxRate = fxForecast.predictions.at(-1);
     }
 
-    const latestCpo = await getLatestCpoPrice();
-    if (!latestCpo) {
-      return res.status(500).json({ error: "CPO data unavailable" });
-    }
-
-    const cpoDate = new Date(latestCpo.date);
-    const now = new Date();
-
-    // normalize both to month-level
-    cpoDate.setDate(1);
-    now.setDate(1);
-
-    let offsetMonths = monthsBetween(cpoDate, now);
-
-    if (monthsAhead !== null) {
-      offsetMonths += monthsAhead;
-    }
-
-    if (offsetMonths <= 0) {
-      worldPrice = latestCpo.value;
-    } else {
       const cpoForecast = await runPython([
         cpoScript,
-        offsetMonths.toString()
+        monthsAhead.toString()
       ]);
       worldPrice = cpoForecast.predictions.at(-1);
-    }
 
     let domesticProd = null;
   
-    if (monthsAhead !== null) {
   const prodResult = await runPython([
     prodScript,
     targetYear.toString()
   ]);
   domesticProd = prodResult.domestic_production;
-}
     
     const mainResult = await runPython([
       mainScript,
