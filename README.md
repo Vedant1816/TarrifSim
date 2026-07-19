@@ -202,10 +202,10 @@ Please ensure no sensitive data (API keys or secrets) is committed.
 
 ## 🙌 Acknowledgements
 
-Supabase  
-Open Government Data Platform India
-FRED Economic Data  
-Currency Freaks  
-Google Gemini API  
-Open-source Machine Learning ecosystem
+- Supabase
+- Open Government Data Platform India
+- FRED Economic Data
+- Currency Freaks
+- Google Gemini API
+- Open-source Machine Learning ecosystem
 
